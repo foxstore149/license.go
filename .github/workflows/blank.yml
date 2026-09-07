@@ -11,18 +11,18 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: '1.21'
       
-      - name: Build ARM64 (Android)
+      - name: Build ARM64
         run: |
           GOOS=linux GOARCH=arm64 go build -o license_module_arm64 license.go
       
-      - name: Build AMD64 (PC)
+      - name: Build AMD64
         run: |
           GOOS=linux GOARCH=amd64 go build -o license_module_amd64 license.go
       
@@ -31,7 +31,7 @@ jobs:
           GOOS=windows GOARCH=amd64 go build -o license_module.exe license.go
       
       - name: Upload binaries
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: license-binaries
           path: |
