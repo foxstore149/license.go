@@ -1,0 +1,40 @@
+name: Build License Module
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      
+      - name: Build ARM64 (Android)
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o license_module_arm64 license.go
+      
+      - name: Build AMD64 (PC)
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o license_module_amd64 license.go
+      
+      - name: Build Windows
+        run: |
+          GOOS=windows GOARCH=amd64 go build -o license_module.exe license.go
+      
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: license-binaries
+          path: |
+            license_module_arm64
+            license_module_amd64
+            license_module.exe
